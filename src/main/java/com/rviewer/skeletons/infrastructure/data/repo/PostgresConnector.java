@@ -1,6 +1,6 @@
-package com.rviewer.skeletons.infrastructure.persistence;
+package com.rviewer.skeletons.infrastructure.data.repo;
 
-import com.rviewer.skeletons.domain.services.persistence.DatabaseConnector;
+import com.rviewer.skeletons.domain.repo.DatabaseConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;

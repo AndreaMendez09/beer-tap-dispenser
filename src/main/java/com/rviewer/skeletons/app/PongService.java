@@ -1,7 +1,7 @@
-package com.rviewer.skeletons.domain.services;
+package com.rviewer.skeletons.app;
 
-import com.rviewer.skeletons.domain.responses.PongResponse;
-import com.rviewer.skeletons.domain.services.persistence.DatabaseConnector;
+import com.rviewer.skeletons.domain.repo.DatabaseConnector;
+import com.rviewer.skeletons.infrastructure.api.res.PongResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.rviewer.skeletons.domain.responses;
+package com.rviewer.skeletons.infrastructure.api.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

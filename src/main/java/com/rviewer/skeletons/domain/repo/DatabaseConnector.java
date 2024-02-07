@@ -1,4 +1,4 @@
-package com.rviewer.skeletons.domain.services.persistence;
+package com.rviewer.skeletons.domain.repo;
 
 public interface DatabaseConnector {
 
