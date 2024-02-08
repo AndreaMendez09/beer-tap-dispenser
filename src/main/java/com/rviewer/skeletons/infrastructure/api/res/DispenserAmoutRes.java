@@ -8,7 +8,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
-public class AmoutResponse {
+public class DispenserAmoutRes {
 
   private Double amount;
 

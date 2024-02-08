@@ -2,23 +2,47 @@ package com.rviewer.skeletons.infrastructure.data.repo;
 
 import com.rviewer.skeletons.domain.dto.DispenserUsageDTO;
 import com.rviewer.skeletons.domain.repo.DispenserCommandRepo;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class DispenserCommandRepository implements DispenserCommandRepo {
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+  private JdbcTemplate jdbcTemplate;
+  private SimpleJdbcInsert simpleJdbcInsert;
 
-    @Override
-    public void save(DispenserUsageDTO t) {
+  @Autowired
+  public DispenserCommandRepository(JdbcTemplate jdbcTemplate) {
+    this.jdbcTemplate = jdbcTemplate;
+    this.simpleJdbcInsert =
+        new SimpleJdbcInsert(jdbcTemplate)
+            .withTableName("dispenser")
+            .usingGeneratedKeyColumns("id");
+  }
 
-    }
+  @Override
+  public Long save(DispenserUsageDTO t) {
+    Map<String, Object> parameters = new HashMap<>();
+    parameters.put("opened_at", t.getOpenedAt());
+    parameters.put("closed_at", t.getClosedAt());
+    parameters.put("flow_volume", t.getFlowVolume());
+    parameters.put("total_spent", t.getTotalSpent());
 
-    @Override
-    public void updateStatus(Long id) {
+    Number generatedId = simpleJdbcInsert.executeAndReturnKey(parameters);
+    return generatedId.longValue();
+  }
 
-    }
+  @Override
+  public void updateStatus(DispenserUsageDTO t) {
+    String query = "UPDATE dispenser SET "
+            + "opened_at = COALESCE(?, opened_at), "
+            + "closed_at = COALESCE(?, closed_at) "
+            + "WHERE id = ?";
+
+    jdbcTemplate.update(query, t.getOpenedAt(), t.getClosedAt(), t.getId());
+  }
 }

@@ -5,7 +5,8 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class DispenserResponse {
+public class DispenserRes {
+  private Long id;
 
   private Double flowVolume;
 }
