@@ -42,16 +42,17 @@ public class DispenserService {
 
     public void changeStatus(DispenserStatusReq req, Long id) {
         DispenserUsageDTO dtoRepo = dispenserQueryRepo.retrieve(id);
-        var actualStatus = dispenserMapper.mapToEnum(dtoRepo);
+        var oldStatus = dispenserMapper.mapToEnum(dtoRepo);
+        var newStatus = req.getStatus();
 
-        if (actualStatus.equals(req.getStatus())) {
+        if (newStatus.equals(oldStatus)) {
             throw new DispenserIsAlreadyStatus("Dispenser is already opened/closed");
         }
         var dtoToUpdate = dispenserMapper.mapToDto(req, id);
-        if (req.getStatus().equals(DispenserStatusEnum.CLOSE)) {
-            return new DispenserUsageDTO(id, null, req.getUpdatedAt() ,null, null);
+
+        switch (newStatus){
+            case CLOSE -> dispenserCommandRepo.close(dtoToUpdate);
+            case OPEN -> dispenserCommandRepo.open(dtoToUpdate);
         }
-        return new DispenserUsageDTO(id, req.getUpdatedAt(), null, null, null);
-        dispenserCommandRepo.updateStatus(dtoToUpdate);
     }
 }

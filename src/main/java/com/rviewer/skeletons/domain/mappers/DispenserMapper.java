@@ -22,7 +22,7 @@ public class DispenserMapper {
     if (dto.getClosedAt() == null && dto.getOpenedAt() == null) {
       return null;
     }
-    if (dto.getClosedAt() == null) {
+    if (dto.getClosedAt() != null) {
       return DispenserStatusEnum.CLOSE;
     }
     return DispenserStatusEnum.OPEN;
