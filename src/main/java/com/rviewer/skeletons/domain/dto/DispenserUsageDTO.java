@@ -19,4 +19,7 @@ public class DispenserUsageDTO {
 
   private Double flowVolume;
   private Double totalSpent;
+
+  public DispenserUsageDTO() {
+  }
 }

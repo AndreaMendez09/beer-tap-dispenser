@@ -1,6 +1,5 @@
 package com.rviewer.skeletons.infrastructure.persistence;
 
-import com.rviewer.skeletons.infrastructure.data.repo.PostgresConnector;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;

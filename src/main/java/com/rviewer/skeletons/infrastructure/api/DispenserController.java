@@ -15,7 +15,7 @@ public class DispenserController {
 
   @Autowired private DispenserService dispenserService;
 
-  @GetMapping("/:id/spending")
+  @GetMapping("/{id}/spending")
   public ResponseEntity<DispenserAmoutRes> retrieveAmout(@PathVariable Long id) {
     return ResponseEntity.ok(dispenserService.retrieveAmout(id));
   }
@@ -25,7 +25,7 @@ public class DispenserController {
     return ResponseEntity.ok(dispenserService.save(dispenserFlowReq));
   }
 
-  @PutMapping("/:id/status")
+  @PutMapping("/{id}/status")
   public ResponseEntity<?> changeStatus(@PathVariable Long id, @RequestBody DispenserStatusReq dispenserStatusReq) {
     dispenserService.changeStatus(dispenserStatusReq, id);
     return ResponseEntity.accepted().build();

@@ -6,5 +6,7 @@ public interface DispenserCommandRepo {
 
   public Long save(DispenserUsageDTO t);
 
-  public void updateStatus(DispenserUsageDTO t);
+  public void open(DispenserUsageDTO t);
+
+  public void close(DispenserUsageDTO t);
 }

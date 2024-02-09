@@ -3,9 +3,9 @@ package com.rviewer.skeletons.domain.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class DispenserNotFound extends RuntimeException{
-    public DispenserNotFound(String message){
+@ResponseStatus(value = HttpStatus.CONFLICT)
+public class DispenserIsAlreadyStatus extends RuntimeException{
+    public DispenserIsAlreadyStatus(String message){
         super(message);
     }
 }
