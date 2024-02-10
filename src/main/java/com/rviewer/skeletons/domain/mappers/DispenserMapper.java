@@ -7,11 +7,13 @@ import com.rviewer.skeletons.infrastructure.api.req.DispenserStatusReq;
 import com.rviewer.skeletons.infrastructure.api.res.DispenserAmoutRes;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.List;
+
 @Component
 public class DispenserMapper {
-  public DispenserAmoutRes mapToRes(DispenserUsageDTO dto) {
-    //return new DispenserAmoutRes(id, dto.getFlowVolume());
-    return null;
+  public DispenserAmoutRes mapToRes(List<DispenserUsageDTO> dto, double amount) {
+    return new DispenserAmoutRes(amount, dto);
   }
 
   public DispenserUsageDTO mapToDto(DispenserFlowReq dispenserFlowReq) {
