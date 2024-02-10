@@ -38,18 +38,15 @@ public class DispenserCommandRepository implements DispenserCommandRepo {
 
   @Override
   public void open(DispenserUsageDTO t) {
-    String query = "UPDATE dispenser SET "
-            + "opened_at = ?, "
-            + "closed_at = NULL "
-            + "WHERE id = ?";
+    String query =
+        "UPDATE dispenser SET " + "opened_at = ?, " + "closed_at = NULL " + "WHERE id = ?";
 
     jdbcTemplate.update(query, t.getOpenedAt(), t.getId());
   }
+
   @Override
   public void close(DispenserUsageDTO t) {
-    String query = "UPDATE dispenser SET "
-            + "closed_at = ? "
-            + "WHERE id = ?";
+    String query = "UPDATE dispenser SET " + "closed_at = ? " + "WHERE id = ?";
 
     jdbcTemplate.update(query, t.getClosedAt(), t.getId());
   }

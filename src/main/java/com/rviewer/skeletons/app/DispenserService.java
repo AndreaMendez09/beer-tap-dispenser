@@ -7,17 +7,24 @@ import com.rviewer.skeletons.domain.mappers.DispenserMapper;
 import com.rviewer.skeletons.domain.repo.DispenserCommandRepo;
 import com.rviewer.skeletons.domain.repo.DispenserLogQueryRepo;
 import com.rviewer.skeletons.domain.repo.DispenserQueryRepo;
+import com.rviewer.skeletons.infrastructure.api.DispenserController;
 import com.rviewer.skeletons.infrastructure.api.req.DispenserFlowReq;
 import com.rviewer.skeletons.infrastructure.api.req.DispenserStatusReq;
 import com.rviewer.skeletons.infrastructure.api.res.DispenserAmoutRes;
 import com.rviewer.skeletons.infrastructure.api.res.DispenserRes;
 import java.time.Duration;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DispenserService {
+
+  private static final Logger LOG = LogManager.getLogger(DispenserService.class);
 
   private final Double COST_PER_LITER = 12.25;
   private final DispenserCommandRepo dispenserCommandRepo;
@@ -55,7 +62,6 @@ public class DispenserService {
 
   public DispenserRes save(DispenserFlowReq dispenserFlowReq) {
     Long id = dispenserCommandRepo.save(dispenserMapper.mapToDto(dispenserFlowReq));
-
     return new DispenserRes(id, dispenserFlowReq.getFlowVolume());
   }
 
@@ -65,7 +71,8 @@ public class DispenserService {
     var newStatus = req.getStatus();
 
     if (newStatus.equals(oldStatus)) {
-      throw new DispenserIsAlreadyStatus("Dispenser is already opened/closed");
+      LOG.warn("Dispenser with id {} is already {}", id, newStatus);
+      throw new DispenserIsAlreadyStatus("Dispenser is already in " + newStatus);
     }
     var dtoToUpdate = dispenserMapper.mapToDto(req, id);
 

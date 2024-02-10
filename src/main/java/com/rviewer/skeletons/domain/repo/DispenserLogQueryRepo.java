@@ -5,5 +5,5 @@ import com.rviewer.skeletons.domain.dto.DispenserUsageDTO;
 import java.util.List;
 
 public interface DispenserLogQueryRepo {
-    public List<DispenserUsageDTO> retrieveAllById(Long id);
+  public List<DispenserUsageDTO> retrieveAllById(Long id);
 }

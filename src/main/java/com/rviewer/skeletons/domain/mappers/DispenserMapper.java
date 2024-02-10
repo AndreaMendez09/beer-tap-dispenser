@@ -20,7 +20,7 @@ public class DispenserMapper {
     return new DispenserUsageDTO(null, null, null, dispenserFlowReq.getFlowVolume(), null);
   }
 
-  public DispenserStatusEnum mapToEnum (DispenserUsageDTO dto) {
+  public DispenserStatusEnum mapToEnum(DispenserUsageDTO dto) {
     if (dto.getClosedAt() == null && dto.getOpenedAt() == null) {
       return null;
     }
@@ -32,7 +32,7 @@ public class DispenserMapper {
 
   public DispenserUsageDTO mapToDto(DispenserStatusReq req, Long id) {
     if (req.getStatus().equals(DispenserStatusEnum.CLOSE)) {
-      return new DispenserUsageDTO(id, null, req.getUpdatedAt() ,null, null);
+      return new DispenserUsageDTO(id, null, req.getUpdatedAt(), null, null);
     }
     return new DispenserUsageDTO(id, req.getUpdatedAt(), null, null, null);
   }
