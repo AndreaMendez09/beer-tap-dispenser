@@ -1,71 +1,82 @@
-# Beer tap dispenser API
+# README
 
-Anyone who goes to a festival at least one time knows how difficult is to grab some drinks from the bars. They are
-crowded and sometimes queues are longer than the main artist we want to listen!
+## Project Structure
 
-That's why some promoters are developing an MVP for new festivals. Bar counters where you can go and serve yourself
-a beer. This will help make the waiting time much faster, making festival attendees happier and concerts even more
-crowded, avoiding delays!
+The project follows a Hexagonal Architecture pattern. This architectural style emphasizes separation of concerns and modularity by dividing the application into multiple layers
 
-<p align="center">
-    <img alt="Tap dispenser" width="300px" src="./.github/assets/dispenser.png" />
-</p>
+```
+.
+      ├── shared                       => Context shared utils
+      │     ├── dtos                   => Shared dtos
+      │     └── mapper                 => Shared DTOs mappers
+      ├── app                          => Business logic layer
+      │   └──Dispenser service
+      ├── domain                       => Domain packages
+      │   ├── actions                  => Domain Interfaces/services ports to decouple operations
+      │   ├── mapper                   => DTOs mappers 
+      │   ├── entity                   => Domain entities
+      │   └── exception                => Domain exceptions
+      └── infra                        => I/O and persistence logic
+          ├── api                      => App Controllers
+          │   ├── req                  => Request custom dtos
+          │   ├── res                  => Response custom dtos
+          │   └── Controller
+          └── data                     => Repositories implementations SQL
+              └── repo              
+          
+         
+```
+### Code Formatting
 
-## How it works?
+Formats source code using the google-java-format tool.
 
-The aim of this API is to allow organizers to set up these bar counters allowing the attendees self-serving.
+## External Dependencies
 
-So, once an attendee wants to drink a beer they just need to open the tap! The API will start counting how much flow
-comes out and, depending on the price, calculate the total amount of money.
+The following external dependencies have been added to the project:
 
-You could find the whole description of the API in the [OpenAPI description file](/api.spec.yaml) and send request to a
-mock server with [this URL](https://rviewer.stoplight.io/docs/beer-tap-dispenser/juus8uwnzzal5-beer-tap-dispenser)
+- **Flyway DB**: Was chosen for managing database schema migrations.It provides version control for database schemas and ensures that all database instances are kept up-to-date with the latest changes.
+    - Dependency: `implementation 'org.flywaydb:flyway-core'`
 
-### Workflow
+- **Log4j 2**: Logging framework for log messages.
+    - Dependencies:
+        - `implementation 'org.apache.logging.log4j:log4j-api:2.14.1'`
+        - `implementation 'org.apache.logging.log4j:log4j-core:2.17.1'`
 
-The workflow of this API is as follows:
+## Running the API
 
-1. Admins will **create the dispenser** by specifying a `flow_volume`. This config will help to know how many liters of
-   beer come out per second and be able to calculate the total spend.
-2. Every time an attendee **opens the tap** of a dispenser to puts some beer, the API will receive a change on the
-   corresponding dispenser to update the status to `open`. With this change, the API will start counting how much time
-   the tap is open and be able to calculate the total price later
-3. Once the attendee **closes the tap** of a dispenser, as the glass is full of beer, the API receives a change on the
-   corresponding dispenser to update the status to `close`. At this moment, the API will stop counting and mark it
-   closed.
+To run the API, follow these steps:
 
-At the end of the event, the promoters will want to know how much money they make with this new approach. So, we have to
-provide some information about how many times a dispenser was used, for how long, and how much money was made with each
-service.
+1. **Clone the Repository**: Clone the project repository from the source repository.
 
-> ⚠️ The promoters could check how much money was spent on each dispenser while an attendee is taking beer!
-> So you have to control that by calculating the time diff between the tap opening and the request time
+2. **Configure Database**: Ensure that the database configuration in `application.yml` is correctly set up according to your environment.
 
----
 
-## What are we looking for?
 
-* **A well-designed solution and architecture.** Avoid duplication, extract re-usable code
-  where makes sense. We want to see that you can create an easy-to-maintain codebase.
-* **Test as much as you can.** One of the main pain points of maintaining other's code
-  comes when it does not have tests. So try to create tests covering, at least, the main classes.
-* **Document your decisions**. Try to explain your decisions, as well as any other technical requirement (how to run the
-  API, external dependencies, etc ...)
+## Data Model Explanation
 
-## How to submit your solution
 
-* Push your code to the `devel` branch - we encourage you to commit regularly to show your thinking process was.
-* **Create a new Pull Request** to `main` branch & **merge it**.
+### dispenser Table
 
-Once merged you **won't be able to change or add** anything to your solution, so double-check that everything is as
-you expected!
+The `dispenser` table represents the main entity in the system, which tracks dispenser usage information. Here's a breakdown of its columns:
 
-Remember that **there is no countdown**, so take your time and implement a solution that you are proud!
+- `id`: Primary key of the dispenser, automatically generated using the SERIAL data type.
+- `opened_at`: Timestamp indicating when the dispenser was opened.
+- `closed_at`: Timestamp indicating when the dispenser was closed.
+- `flow_volume`: Decimal value representing the flow volume of the dispenser.
 
---- 
+### dispenser_log Table
 
-<p align="center">
-  If you have any feedback or problem, <a href="mailto:help@rviewer.io">let us know!</a> 🤘
-  <br><br>
-  Made with ❤️ by <a href="https://rviewer.io">Rviewer</a>
-</p>
+The `dispenser_log` table stores log entries for dispenser usage. It contains the following columns:
+
+- `id`: Primary key of the log entry, automatically generated using the SERIAL data type.
+- `entity_id`: Foreign key referencing the `id` column of the `dispenser` table, establishing a relationship between log entries and dispensers.
+- `opened_at`: Timestamp indicating when the dispenser was opened.
+- `closed_at`: Timestamp indicating when the dispenser was closed.
+- `flow_volume`: Decimal value representing the flow volume of the dispenser.
+
+### Trigger Function and Trigger
+
+A trigger function named `trigger_dispenser_update_log` is defined to manage data insertion into the `dispenser_log` table. It is executed after an update operation on the `dispenser` table. The function checks if the dispenser was closed (i.e., `NEW.closed_at IS NULL`) and if it was previously opened (`OLD.opened_at IS NOT NULL`). If both conditions are met, a new log entry is inserted into the `dispenser_log` table.
+
+The `dispenser_update_log` trigger is associated with the `dispenser` table and executes the `trigger_dispenser_update_log` function after each update operation on the table, facilitating automatic logging of dispenser usage.
+
